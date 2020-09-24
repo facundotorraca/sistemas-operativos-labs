@@ -1,0 +1,56 @@
+#include "utils.h"
+
+// splits a string line in two
+// acording to the splitter character
+char* split_line(char* buf, char splitter) {
+
+	int i = 0;
+
+	while (buf[i] != splitter && buf[i] != END_STRING)
+		i++;
+
+	buf[i++] = END_STRING;
+
+	while (buf[i] == SPACE)
+		i++;
+
+	return &buf[i];
+}
+
+// looks in a block for the 'c' character
+// and returns the index in which it is, or -1
+// in other case
+int block_contains(char* buf, char c) {
+
+	for (size_t i = 0; i < strlen(buf); i++)
+		if (buf[i] == c)
+			return i;
+
+	return -1;
+}
+
+// returns a pointer to the begin of the command
+// without spaces
+char* remove_begin_spaces(char* buf) {
+
+    int i = 0;
+
+    while (buf[i] == SPACE && buf[i] != END_STRING)
+        i++;
+
+    return &buf[i];
+}
+
+//unmask an exit status
+int unmask(int status) {
+    if (WIFEXITED(status))
+        return WEXITSTATUS(status);
+
+    if (WIFSIGNALED(status))
+        return -WTERMSIG(status);
+
+    if (WTERMSIG(status))
+        return -WSTOPSIG(status);
+
+    return -1;
+}
